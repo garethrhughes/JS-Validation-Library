@@ -1,0 +1,266 @@
+﻿<!DOCTYPE html>
+<html>
+
+<head>
+  <title>JS validate</title>
+
+  <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
+  <script type="text/javascript" src="validate.js"></script>
+  <script type="text/javascript">
+    
+    // success callback called when all tests pass against a given form element
+    var success = function(form, name, errors){
+      $('[name=' + name + ']').css('backgroundColor', 'green');
+      $('[name=' + name + ']').parents('div').find('div.err').remove();
+    };
+
+    // fail callback called when a test fails
+    var fail = function(form, name, errors){
+      $('[name=' + name + ']').parents('div').find('div.err').remove();
+      $('[name=' + name + ']').parents('div').append('<div class="err">' + errors + '<\/div>');
+      $('[name=' + name + ']').css('backgroundColor', 'red');
+    };
+
+
+    // clear callback called when field has not been validated
+    var clear = function(form, name){
+      $('[name=' + name + ']').css('backgroundColor', 'none');
+      $('[name=' + name + ']').parents('div').find('div.err').remove();
+    };
+
+    // add the rules for this form
+    var rules = {
+      name: {
+        required : 'Name field is required'
+      },
+
+      email: {
+        email: 'Invalid email', 
+        required : 'Email is required'
+      },
+
+      phone: {
+        phone: 'Invalid phone no'
+      },
+
+      postcode: {
+        postcode: 'Invalid postcode'
+      },
+
+      confirm: {
+        required: 'You must confirm'
+      }
+    };
+
+    $().ready(function(){
+      Validator('input') // selector for inputs to be validated
+        .forForm('to-validate') // id of form which is validated
+        .onBlur() // validation is triggered onBlur
+        .onSubmit() // validation is triggered onSubmit
+        .onChange() // validation is triggered onChange 
+        .onValidationFail(fail)  // wire up the fail callback
+        .onValidationCleared(clear)  // wireup the cleared callback
+        .onValidationPassed(success) // wire up the passed callback
+        .addRules(rules);
+    });
+
+  </script>
+</head>
+
+<body>
+  <form id="to-validate">
+    <fieldset>
+
+      <div>
+        <label>
+          <span>Name</span>
+          <span><input type="text" name="name" /></span>
+        </label>
+      </div>
+
+      <div>
+        <label>
+          <span>Email</span>
+          <span><input type="text" name="email" /></span>
+        </label>
+      </div>
+    
+      <div>
+        <label>
+          <span>Phone</span>
+          <span><input type="text" name="phone" /></span>
+        </label>
+      </div>
+    
+      <div>
+        <label>
+          <span>Postcode</span>
+          <span><input type="text" name="postcode" /></span>
+        </label>
+      </div>
+    
+      <div>
+        <label>
+          <span>Confirm</span>
+          <span><input type="checkbox" name="confirm" /></span>
+        </label>
+      </div>
+
+      <input type="submit" value="Submit" name="submit" />
+    </fieldset>
+  </form>
+
+  <h2>Code for above form</h2>
+<code><pre>
+&lt;script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"&gt;&lt;/script&gt;
+&lt;script type="text/javascript" src="validate.js"&gt;&lt;/script&gt;
+&lt;script type="text/javascript"&gt;
+    
+  // success callback called when all tests pass against a given form element
+  var success = function(form, name, errors){
+    $('[name=' + name + ']').css('backgroundColor', 'green');
+    $('[name=' + name + ']').parents('div').find('div.err').remove();
+  };
+
+  // fail callback called when a test fails
+  var fail = function(form, name, errors){
+    $('[name=' + name + ']').parents('div').find('div.err').remove();
+    $('[name=' + name + ']').parents('div').append('<div class="err">' + errors + '<\/div>');
+    $('[name=' + name + ']').css('backgroundColor', 'red');
+  };
+
+
+  // clear callback called when field has not been validated
+  var clear = function(form, name){
+    $('[name=' + name + ']').css('backgroundColor', 'none');
+    $('[name=' + name + ']').parents('div').find('div.err').remove();
+  };
+
+  // add the rules for this form
+  var rules = {
+    name: {
+      required : 'Name field is required'
+    },
+
+    email: {
+      email: 'Invalid email', 
+      required : 'Email is required'
+    },
+
+    phone: {
+      phone: 'Invalid phone no'
+    },
+
+    postcode: {
+      postcode: 'Invalid postcode'
+    },
+
+    confirm: {
+      required: 'You must confirm'
+    }
+  };
+
+  $().ready(function(){
+    Validator('input') // selector for inputs to be validated
+      .forForm('to-validate') // id of form which is validated
+      .onBlur() // validation is triggered onBlur
+      .onSubmit() // validation is triggered onSubmit
+      .onChange() // validation is triggered onChange 
+      .onValidationFail(fail)  // wire up the fail callback
+      .onValidationCleared(clear)  // wireup the cleared callback
+      .onValidationPassed(success) // wire up the passed callback
+      .addRules(rules);
+  });
+
+&lt;/script&gt;
+</pre><code>
+
+  <h2>Rule examples</h2>
+  <div>
+    <code><pre>
+required : "Message here"
+
+requiredif : {
+  message : "Message here",
+  check : function(ele){
+    return true/false
+  }
+}
+
+custom : {
+  message "Message here",
+  check : function(ele){
+    // custom evaluation here
+
+    return true/false;
+  }
+}
+        
+isnumeric : "Message here"
+
+maxlength : {
+  message : "Message here",
+  val : 5
+}
+        
+minlength : {
+  message : "Message here",
+  val : 5
+}
+
+email : "Message here"
+
+date: "Message here"
+
+regex : {
+  message : "Message here",
+  expr : /regex/
+}
+
+equalto : {
+  element : "name here"
+  message : "Message here"
+}
+
+postcode : "Message here"
+
+phone : "Message here"
+
+greaterthan : { 
+  message : "Message here",
+  val : 4
+}
+
+greaterthanorequal : { 
+  message : "Message here",
+  val : 4
+}
+
+
+lessthan : { 
+  message : "Message here",
+  val : 4
+}
+
+lessthanorequal : { 
+  message : "Message here",
+  val : 4
+}
+
+maxnumberoflines : { 
+  message : "Message here",
+  val : 4
+}
+
+// Will GET json with "field" set to the name of the validated field
+// expects true or false return
+ajax : { 
+  message : "Message here",
+  url : "url here"
+}
+    </pre></code>
+  </div>
+
+</body>
+
+</html>
